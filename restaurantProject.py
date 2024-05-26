@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 
-tables = [
+tables = [ #                  משתנה המאחסן מידע עבור השולחנות במסעדה
     {"id": 1, "capacity": 2, "is_available": False},
     {"id": 2, "capacity": 4, "is_available": False},
     {"id": 3, "capacity": 6, "is_available": False},
@@ -14,21 +14,23 @@ tables = [
     {"id": 10, "capacity": 4, "is_available": False}
 ]
 
-menu=[
+menu=[ #              משתנה המאחסן מידע עבור התפריט במסעדה
     {"first":{"Home Bread":12,"Fresh Salad":18,"Hummus":16,"French Fries":17}},
     {"main":{"Kebab":24,"Chicken":24,"Steak":113,"Combination":160}},
     {"desserts":{"Malabi":15,"Chocolate Cake":17,"Ice-Cream":8}},
     {"drinks":{"Coca-Cola":12,"Diet-Coke":12,"Mineral-Water":10,"Orange juice":12}}
 ]
 
-order=[]
+order=[]    # משתנה המאחסן מידע עבור ההזמנה של הלקוח בעת ריצת התכנית
 
-check=[]
+check=[]    # משתנה המאחסן מידע עבור ההמחירים של ההזמנה של הלקוח בעת ריצת התכנית
 
-def check_table():
+
+def check_table():   #     פונקציה האחראית על ביצוע בדיקה האם יש שולחן מתאים במסעדה לכמות הלקוחות שהזין הלקוח
     global tableNum,avialbleLbl,thankYouBtn
     avialbleLbl=Label(host,text=" ")
     num_of_guests = int(hostEntry.get())
+    
     # בדיקה אם יש שולחן פנוי מתאים
     available_table = False
     for table in tables:
@@ -37,7 +39,9 @@ def check_table():
             table["is_available"]= False
             tableNum = table["id"]
             break
-    # הצגת הודעה מתאימה
+            
+    # :הצגת הודעה מתאימה
+    
     if available_table:
         avialbleLbl.config(text=f"please go to table number {tableNum}")
         avialbleLbl.pack(pady=4)
@@ -50,6 +54,7 @@ def check_table():
         avialbleLbl=Label(host,text="we don`t have an available table right now,\nplease wait.")
         avialbleLbl.pack(pady=4)
 
+#  :פונקציה האחראית על יצירת חלון התפריט אשר יציג את המנות והמחירים בתפריט לפי קטגוריות
 def give_menu():
     waiterBtn.place(x=150,y=70)
     global low
@@ -281,7 +286,7 @@ def giveCheck():
 
 def addToOrder(item_name):
     order.append(item_name)
-    orderTxt.delete('1.0', END)  # נקה את הטקסט הנוכחי
+    orderTxt.delete('1.0', END)  
     for item in order:
         orderTxt.insert(END, f"{item}\n")
 
