@@ -1,36 +1,34 @@
 from tkinter import *
 from tkinter import messagebox
 
-tables = [ #                  משתנה המאחסן מידע עבור השולחנות במסעדה
+tables = [
     {"id": 1, "capacity": 2, "is_available": False},
-    {"id": 2, "capacity": 4, "is_available": False},
-    {"id": 3, "capacity": 6, "is_available": False},
+    {"id": 2, "capacity": 4, "is_available": True},
+    {"id": 3, "capacity": 6, "is_available": True},
     {"id": 4, "capacity": 2, "is_available": True},
     {"id": 5, "capacity": 6, "is_available": False},
     {"id": 6, "capacity": 2, "is_available": False},
-    {"id": 7, "capacity": 2, "is_available": False},
+    {"id": 7, "capacity": 2, "is_available": True},
     {"id": 8, "capacity": 6, "is_available": True},
     {"id": 9, "capacity": 4, "is_available": False},
-    {"id": 10, "capacity": 4, "is_available": False}
+    {"id": 10, "capacity": 4, "is_available": True}
 ]
 
-menu=[ #              משתנה המאחסן מידע עבור התפריט במסעדה
+menu=[
     {"first":{"Home Bread":12,"Fresh Salad":18,"Hummus":16,"French Fries":17}},
     {"main":{"Kebab":24,"Chicken":24,"Steak":113,"Combination":160}},
     {"desserts":{"Malabi":15,"Chocolate Cake":17,"Ice-Cream":8}},
     {"drinks":{"Coca-Cola":12,"Diet-Coke":12,"Mineral-Water":10,"Orange juice":12}}
 ]
 
-order=[]    # משתנה המאחסן מידע עבור ההזמנה של הלקוח בעת ריצת התכנית
+order=[]
 
-check=[]    # משתנה המאחסן מידע עבור ההמחירים של ההזמנה של הלקוח בעת ריצת התכנית
+check=[]
 
-
-def check_table():   #     פונקציה האחראית על ביצוע בדיקה האם יש שולחן מתאים במסעדה לכמות הלקוחות שהזין הלקוח
+def check_table():
     global tableNum,avialbleLbl,thankYouBtn
-    avialbleLbl=Label(host,text=" ")
+    avialbleLbl=Label(host,text=" ",bg="pink")
     num_of_guests = int(hostEntry.get())
-    
     # בדיקה אם יש שולחן פנוי מתאים
     available_table = False
     for table in tables:
@@ -39,13 +37,11 @@ def check_table():   #     פונקציה האחראית על ביצוע בדי�
             table["is_available"]= False
             tableNum = table["id"]
             break
-            
-    # :הצגת הודעה מתאימה
-    
+    # הצגת הודעה מתאימה
     if available_table:
         avialbleLbl.config(text=f"please go to table number {tableNum}")
         avialbleLbl.pack(pady=4)
-        thankYouBtn=Button(host,text="Thanks !",command=give_menu)
+        thankYouBtn=Button(host,text="Thanks !",command=lambda:[host.destroy(),waiterBtn.place(x=200,y=70),hostessBtn.place_forget(),give_menu()],bg="light green")
         thankYouBtn.pack()
         return tableNum
     else:
@@ -54,13 +50,9 @@ def check_table():   #     פונקציה האחראית על ביצוע בדי�
         avialbleLbl=Label(host,text="we don`t have an available table right now,\nplease wait.")
         avialbleLbl.pack(pady=4)
 
-#  :פונקציה האחראית על יצירת חלון התפריט אשר יציג את המנות והמחירים בתפריט לפי קטגוריות
 def give_menu():
-    waiterBtn.place(x=150,y=70)
     global low
-    hostessBtn.destroy()
     menuPage=Tk()
-    host.destroy()
     menuPage.geometry("350x620+200+15")
     menuPage.config(bg="brown")
     menuLbl=Label(menuPage,text="Menu",font=("David bold",22),bg="brown").pack(pady=4)
@@ -79,10 +71,11 @@ def call_host():
     host=Tk()
     host.geometry("320x200+870+100")
     host.title("Hostess")
-    hostLbl=Label(host, text="Hello\nWellcome to Oved-Bakfar.\nSeats for how much people ?",font=("Arial",12)).pack()
-    hostEntry=Entry(host,font=("Arial",12))
+    host.configure(bg="pink")
+    hostLbl=Label(host, text="Hello\nWellcome to Oved-Bakfar.\nSeats for how much people ?",font=("Arial",12),bg="pink").pack()
+    hostEntry=Entry(host,font=("Arial",12),bg="pink")
     hostEntry.pack(pady=4)
-    checkBtn=Button(host,text="check",bg="brown",command=check_table)
+    checkBtn=Button(host,text="check",bg="green",command=check_table)
     checkBtn.pack(pady=8)
     host.mainloop()
 
@@ -202,7 +195,7 @@ def showDesserts():
     backBtn3.place(x=5,y=300)
     
 def showDrinks():
-    global cocaBtn,dietBtn,waterBtn,orangeBtn,backBtn
+    global cocaBtn,dietBtn,waterBtn,orangeBtn,backBtn3
     firstBtn.pack_forget()
     mainBtn.pack_forget()
     dessertsBtn.pack_forget()
@@ -220,7 +213,6 @@ def showDrinks():
     backBtn3.place(x=5,y=300)
     
 def call_waiter():
-    
     global waiter,firstBtn,mainBtn,dessertsBtn,orderTxt,drinksBtn
     waiter=Tk()
     waiter.geometry("350x400+500+150")
@@ -240,53 +232,53 @@ def call_waiter():
     drinksBtn.pack(pady=3)
     doneBtn = Button(waiter,text="Done !",command=createCheck)
     doneBtn.place(x=300,y=300)
+    removeBtn = Button(waiter,text="Remove Last",bg="red",command=removeFromOrder)
+    removeBtn.place(x=140,y=330)
     
     
     waiter.mainloop()
 
 def createCheck():
-    for ord in order:
-        for category in menu:
-            for dish in category.values():
-                for item in dish.keys():
-                        if ord==item:
-                            check.append(dish[item])
-    checkBtn.place(x=110,y=150)
+    checkBtn.place(x=85,y=150)
     waiter.destroy()
+    print(check)
     return check,order
 
 def giveCheck():
     global total
     checkWin = Tk()
     checkWin.title("check")
-    checkWin.geometry("+550+100")
+    checkWin.geometry("+950+70")
     checkWin.configure(border=12)
     total = 0
+    checkLbl = Label(checkWin,text="Check :",font=("Arial bold",22))
+    for item,price in zip(order,check):
+        total+=price
+        itemLbl=Label(checkWin,text=f"{item}  :  ₪{price}").pack()
 
-    order_prices = {}
-
-    checkLbl = Label(checkWin,text="check :",font=("Arial bold",22))
-    checkLbl.pack(pady=4)
-    for price, dish in zip(check, order):
-        total += price
-
-        if dish not in order_prices:
-            order_prices[dish] = 0
-
-        order_prices[dish] += price
-
-    for dish, price in order_prices.items():
-        itemLbl = Label(checkWin, text=f"{dish}  :     {price}$")
-        itemLbl.pack()
-
-    totalLbl = Label(checkWin, text=f"Your total price is: {total}$")
-    totalLbl.pack(pady=20)
+    totalLbl = Label(checkWin, text=f"Your total price is: ₪ {total}")
+    totalLbl.pack(pady=30)
+    aftertotalLbl = Label(checkWin,text="not include service, thank you ! ").pack()
 
     checkWin.mainloop()
 
 def addToOrder(item_name):
     order.append(item_name)
-    orderTxt.delete('1.0', END)  
+    for category in menu:
+            for dish in category.values():
+                for item in dish.keys():
+                        if item_name==item:
+                            check.append(dish[item])
+    orderTxt.delete('1.0', END)  # נקה את הטקסט הנוכחי
+    for item in order:
+        orderTxt.insert(END, f"{item}\n")
+        
+def removeFromOrder():
+    place = len(order) - 1  # חישוב האינדקס
+    if place >= 0:  # בדיקה אם ישנם פריטים (מניעת IndexError)
+        order.pop(place)
+        check.pop(place)
+    orderTxt.delete('1.0', END)  # ניקוי הטקסט
     for item in order:
         orderTxt.insert(END, f"{item}\n")
 
@@ -294,7 +286,7 @@ global waiterBtn,hostessBtn
 root = Tk()
 root.title("Oved-Bakfar")
 root.configure(bg="brown")
-root.geometry("350x250+500+150")
+root.geometry("300x200+500+150")
 
 
 wellcomeLbl=Label(root,text="Wellcome to Oved-Bakfar !\n we will be with you in a minute",bg="brown",fg="white",font=4)
@@ -306,5 +298,7 @@ hostessBtn.place(x=20,y=70)
 waiterBtn=Button(root,text="talk to a waiter",command=call_waiter)
 
 checkBtn=Button(root,text="i`m Done! \ngive me check please",command=giveCheck)
+
+menubtn =Button(root,text="show menu",command=give_menu).place(x=120,y=70)
 
 root.mainloop()
